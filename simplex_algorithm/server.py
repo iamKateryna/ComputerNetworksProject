@@ -3,6 +3,7 @@ import threading
 import parser
 from method import LinearModel
 import json
+from database import *
 
 HEADER = 64
 PORT = 5050
@@ -26,8 +27,16 @@ def handle_client(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT)
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+            elif msg[:8] == "GEN_LINK":
+                ident = int(msg[8:])
+                obj = db.session.query(History).get(ident)
+                return_dict = {'matrix': obj.matrix, 'b_vector': obj.b_vector, 'c_vector': obj.c_vector,
+                               'opt_val': obj.opt_val, 'x_vector': obj.x_vector}
+                return_dict = json.dumps(return_dict)
+                conn.send(return_dict.encode(FORMAT))
             else:
                 A, b, c = parser.parse_json(msg)
+                dictionary = json.loads(msg)
 
                 model1 = LinearModel()
 
@@ -36,13 +45,24 @@ def handle_client(conn, addr):
                 model1.addC(c)
                 model1.setObj("MAX")
 
-                result = model1.optimize()
-                a = {'result': str(result)}
+                result_x, result_ans, result_iter = model1.optimize()
+
+                new_row = History(matrix=dictionary['matrix'],
+                                  b_vector=dictionary['vector_b'],
+                                  c_vector=dictionary['vector_c'],
+                                  opt_val=str(result_ans),
+                                  x_vector=str(result_x))
+                try:
+                    db.session.add(new_row)
+                    db.session.commit()
+                except:
+                    pass
+
+                a = {'result_x': str(result_x), 'result_ans': str(result_ans),
+                     'result_iter': str(result_iter), 'result_id': str(new_row.id)}
                 a = json.dumps(a)
-            #print(f"[{addr}] {msg}")
 
                 conn.send(a.encode(FORMAT))
-
     conn.close()
 
 

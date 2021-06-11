@@ -1,6 +1,7 @@
 import json
 import numpy as np
 
+
 def parse_json(data):
     dictionary = json.loads(data)
 

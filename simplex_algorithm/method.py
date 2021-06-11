@@ -100,9 +100,9 @@ class LinearModel:
 
         tableau = self.getTableau()
 
-        #if (self.printIter == True):
-            #print("initial table:")
-            #self.printTableau(tableau)
+        # if (self.printIter == True):
+        # print("initial table:")
+        # self.printTableau(tableau)
 
         # assume initial basis is not optimal
         optimal = False
@@ -112,10 +112,10 @@ class LinearModel:
 
         while (True):
 
-            #if (self.printIter == True):
-                #print("--------------------------------------------------------------------\n")
-                #print("iter :", iter)
-                #self.printTableau(tableau)
+            # if (self.printIter == True):
+            # print("--------------------------------------------------------------------\n")
+            # print("iter :", iter)
+            # self.printTableau(tableau)
 
             if (self.minmax == "MAX"):
                 for profit in tableau[0, 2:]:
@@ -153,9 +153,9 @@ class LinearModel:
 
             pivot = tableau[r, n]
 
-            #print("\ncolumn:", n)
-            #print("row:", r)
-            #print("element: ", pivot)
+            # print("\ncolumn:", n)
+            # print("row:", r)
+            # print("element: ", pivot)
 
             # perform row operations
             # divide the pivot row with the pivot element
@@ -172,18 +172,19 @@ class LinearModel:
 
             iter += 1
 
-        if (self.printIter == True):
-            print("--------------------------------------------------------------------\n")
-            print("final solution reached; No of iterations: ", iter)
-            self.printTableau(tableau)
-        else:
-            print("Solved")
+        # if self.printIter:
+        #     print("--------------------------------------------------------------------\n")
+        #     print("final solution reached; No of iterations: ", iter)
+        #     self.printTableau(tableau)
+        # else:
+        #     print("Solved")
 
         self.x = np.array([0] * len(self.c), dtype=float)
         # save coefficients
         for key in range(1, (len(tableau))):
-            if (tableau[key, 0] < len(self.c)):
+            if tableau[key, 0] < len(self.c):
                 self.x[int(tableau[key, 0])] = tableau[key, 1]
 
         self.optimalValue = -1 * tableau[0, 1]
-        return tableau
+
+        return self.x, self.optimalValue, iter

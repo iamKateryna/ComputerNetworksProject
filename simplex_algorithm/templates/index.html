@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <title> ACAB </title>
         <meta charset =  'utf-8'/>
-<!--        <link rel='stylesheet' type="text/css" href='../static/styles/style.css'>-->
+        <link rel='stylesheet' type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@300&display=swap" rel="stylesheet">
     </head>
@@ -19,15 +19,15 @@
             <div class="purple_box">
                 <p>matrix</p>
             </div>
-            <input class="input_box big_box" type="text" name="matrix" id="matrix"/>
+            <input class="input_box big_box" type="text" name="matrix" id="matrix" value="{{m_A}}">
             <div class="purple_box">
                 <p>vector b</p>
             </div>
-            <input class="input_box small_box" type="text" name="vector_b" id="vector_b">
+            <input class="input_box small_box" type="text" name="vector_b" id="vector_b" value="{{v_b}}">
             <div class="purple_box">
                 <p>vector c</p>
             </div>
-            <input class="input_box small_box" type="text" name="vector_c" id="vector_c">
+            <input class="input_box small_box" type="text" name="vector_c" id="vector_c" value="{{v_c}}">
         </div>
         <div class="div_2">
                 <button class="go_box" type="submit" >go</button>
@@ -38,8 +38,12 @@
             <div class="orange_box">
                 <p>results:</p>
             </div>
-            <output class = "input_box large_box" ></output>
+            <output class = "input_box large_box">{{result_x}}<br>{{result_ans}}<br>{{result_iter}}</output>
         </div>
+    </div>
+    <div style="text-align: center;">
+        <p>share result:</p>
+        <a href="{{link}}"><p>{{link}}</p></a>
     </div>
 </main>
 </body>
